@@ -1,6 +1,6 @@
 .leaflet-container {
-    width: 80vw;
-    height: 80vh;
+    width: 100vw;
+    height: 100vh;
     margin: auto;
     margin-top: 50px !important;
 }
@@ -10,6 +10,71 @@ h1 {
     margin-top: 10px !important;
 }
 
+.cardLocation {
+    background-color: rgb(103, 172, 240) !important;
+    position: relative !important;
+    color: white !important;
+}
+
 .leaflet-popup-content-wrapper {
-    width: 500px;
+    padding: 0 !important;
+}
+
+.hourly-weather {
+    border-top: 1px solid white !important;
+    border-bottom: 1px solid white !important;
+}
+
+.leaflet-popup-content {
+    margin: 0 !important;
+    width: 300px !important;
+}
+
+element.style {
+    width: 600px !important;
+}
+
+.locationName {
+    position: absolute !important;
+    left: auto !important;
+    padding-bottom: 50px !important;
+}
+
+.locationName2 {
+    position: absolute !important;
+    right: 0pc !important;
+}
+
+.curentWeather {
+    position: absolute;
+    right: 15px;
+    top: 0px;
+}
+
+.card {
+    height: auto !important;
+}
+
+.col {
+    margin: 10px !important;
+}
+
+.curentWeather img,
+.hourly-weather img {
+    width: 50px;
+    height: 50px;
+}
+
+.hourly-weather p:first-of-type {
+    margin-bottom: -10px;
+    margin-top: 4px;
+}
+
+.p2 {
+    margin-top: -10px !important;
+}
+
+.row>* {
+    padding: 0 !important;
+    margin-bottom: -14px !important;
 }

@@ -1,4 +1,5 @@
 export const ADD_LOCATION = 'ADD_LOCATION'
+export const  ADD_TEMP = 'ADD_TEMP'
 
 
 // A Promise is in one of these states:
