@@ -2,7 +2,7 @@ import { ADD_LOCATION } from '../constants'
 
 export const addLocation = (location) => ({ type: ADD_LOCATION, location, x: 9 })
 
-export const getCurrentWeather = (lat, lon, dispatch) => {
+export const getCurrentWeather = (lat, lon) => {
      console.log("Dq")
      fetch('https://api.openweathermap.org/data/2.5/onecall?lat=' + lat + '&lon=' + lon + '&units=metric&appid=98c355d73f22c6eb33c4bc0bd22031fe')
           .then(response => response.json())
@@ -19,10 +19,10 @@ export const getCurrentWeatherData = (lat, lon, dispatch) => {
                fetch('https://api.openweathermap.org/data/2.5/weather?lat=' + lat + '&lon=' + lon + '&units=metric&appid=98c355d73f22c6eb33c4bc0bd22031fe')
                     .then(response2 => response2.json())
                     .then(response2 => {
-                         console.log(11111, response2)
                          var nameLocation = ''
                          nameLocation = response2.name
-                         dispatch({ type: 'ADD_NAME_LOCATION', nameLocation })
+                         var tempLocation = response2.main.temp
+                         dispatch({ type: 'ADD_NAME_LOCATION', nameLocation ,tempLocation })
                     })
 
 
@@ -69,9 +69,6 @@ export const getCurrentWeatherData = (lat, lon, dispatch) => {
 
           })
           .catch(err => console.log("not"))
-
-
-
 
 }
 
