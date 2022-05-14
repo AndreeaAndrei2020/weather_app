@@ -1,6 +1,6 @@
-import { ADD_LOCATION, ADD_TEMP ,ADD_NAME_LOCATION } from '../constants'
+import { ADD_LOCATION, ADD_TEMP, ADD_NAME_LOCATION } from '../constants'
 
-const selectedLocationReducer = (state = { location: { lat: '', lng: '' }, nameLocation: '', temp: 0, curentHour: '',tempLocation : '', curentWeather: '', url: '', hourlyWeather: [], weather7Days: [], descriptionWeather: '', iconWeather: '' }, action) => {
+const selectedLocationReducer = (state = { location: { lat: '', lng: '' }, nameLocation: '', temp: 0, curentHour: '', tempLocation: '', curentWeather: '', url: '', hourlyWeather: [], weather7Days: [], descriptionWeather: '', iconWeather: '' }, action) => {
     switch (action.type) {
         case ADD_LOCATION:
             return { ...state, location: action.location }
@@ -8,7 +8,7 @@ const selectedLocationReducer = (state = { location: { lat: '', lng: '' }, nameL
             return { ...state, hourlyWeather: action.hourlyWeather, weather7Days: action.weather7Days, descriptionWeather: action.descriptionWeather, iconWeather: action.iconWeather }
         case ADD_NAME_LOCATION:
             return {
-                ...state, nameLocation: action.nameLocation , tempLocation : action.tempLocation
+                ...state, nameLocation: action.nameLocation, tempLocation: action.tempLocation
             }
         default:
             return state
