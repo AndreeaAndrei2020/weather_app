@@ -1,74 +1,80 @@
-import { ADD_LOCATION } from '../constants'
+import {
+  ADD_POSITION,
+  ADD_LOCATION_NAME,
+  ADD_LOCATION_TEMP,
+  WEEK_DAYS,
+} from "../constants";
 
-export const addLocation = (location) => ({ type: ADD_LOCATION, location, x: 9 })
+const BASE_URL = "https://api.openweathermap.org/data/2.5";
+const FORECAST_WEATHER_URL = `${BASE_URL}/onecall`;
+const CURRENT_WEATHER_URL = `${BASE_URL}/weather`;
+const APP_ID = "98c355d73f22c6eb33c4bc0bd22031fe";
 
-export const getCurrentWeather = (lat, lon) => {
-     console.log("Dq")
-     fetch('https://api.openweathermap.org/data/2.5/onecall?lat=' + lat + '&lon=' + lon + '&units=metric&appid=98c355d73f22c6eb33c4bc0bd22031fe')
-          .then(response => response.json())
-          .then(response => { console.log('jssss', response) })
-          .catch(err => console.log("not"))
-}
+export const addPosition = (position) => ({ type: ADD_POSITION, position });
 
 export const getCurrentWeatherData = (lat, lon, dispatch) => {
+  fetch(
+    `${FORECAST_WEATHER_URL}?lat=${lat}&lon=${lon}&units=metric&appid=${APP_ID}`
+  )
+    .then((response1) => response1.json())
+    .then((response1) => {
+      fetch(
+        `${CURRENT_WEATHER_URL}?lat=${lat}&lon=${lon}&units=metric&appid=${APP_ID}`
+      )
+        .then((response2) => response2.json())
+        .then((response2) => {
+          const {
+            name: locationName,
+            main: { temp: locationTemp },
+          } = response2;
 
-     fetch('https://api.openweathermap.org/data/2.5/onecall?lat=' + lat + '&lon=' + lon + '&units=metric&appid=98c355d73f22c6eb33c4bc0bd22031fe')
-          .then(response1 => response1.json())
-          .then(response1 => {
+          dispatch({ type: ADD_LOCATION_NAME, locationName, locationTemp });
 
-               fetch('https://api.openweathermap.org/data/2.5/weather?lat=' + lat + '&lon=' + lon + '&units=metric&appid=98c355d73f22c6eb33c4bc0bd22031fe')
-                    .then(response2 => response2.json())
-                    .then(response2 => {
-                         var nameLocation = ''
-                         nameLocation = response2.name
-                         var tempLocation = response2.main.temp
-                         dispatch({ type: 'ADD_NAME_LOCATION', nameLocation ,tempLocation })
-                    })
+          const descriptionWeather = response1.hourly[0].weather[0].main;
+          const iconWeather = `http://openweathermap.org/img/w/${response1.hourly[0].weather[0].icon}.png`;
 
+          // weather for the next 5 hours
+          const hourlyWeather = [];
+          response1.hourly.forEach((item, index) => {
+            if (index > 4) return;
 
-               console.log(22222, response1)
-               var hourlyWeather = []
-               var descriptionWeather = response1.hourly[0].weather[0].main
-               var iconWeather = 'http://openweathermap.org/img/w/' + response1.hourly[0].weather[0].icon + '.png'
+            const hourDateObj = new Date(
+              item.dt * 1000 + response1.timezone_offset * 1000
+            ).getHours();
 
-               ///weather for the next 5 hours
-               for (var i = 0; i <= 4; i++) {
+            hourlyWeather.push({
+              id: hourDateObj,
+              hourlyWeather: hourDateObj,
+              temp: parseInt(item.temp),
+              urlIcon: `http://openweathermap.org/img/w/${item.weather[0].icon}.png`,
+              main: item.weather[0].main,
+            });
+          });
 
-                    var js = response1.hourly[i]
-                    let x = {}
-                    var gy = new Date(js.dt * 1000 + (response1.timezone_offset * 1000))
+          const weather7Days = []
+          response1.daily.forEach((item, index) => {
+            if (index > 4) return;
+            const dayDateObj = new Date(
+              item.dt * 1000 + response1.timezone_offset * 1000
+            ).getDay();
 
-                    x['id'] = i
-                    x['hour'] = gy.getHours()
-                    x['temp'] = parseInt(js.temp)
-                    x['urlIcon'] = 'http://openweathermap.org/img/w/' + js.weather[0].icon + '.png'
-                    x['main'] = js.weather[0].main
+            weather7Days.push({
+              id: dayDateObj,
+              name: WEEK_DAYS[dayDateObj].substring(0, 3),
+              tempMin: parseInt(item.temp.min),
+              tempMax: parseInt(item.temp.max),
+              urlIcon: `http://openweathermap.org/img/w/${item.weather[0].icon}.png`,
+            });
+          });
 
-                    hourlyWeather.push(x)
-               }
-
-
-               var nr = 1
-               var weather7Days = []
-               var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-               for (var j = 0; j <= 4; j++) {
-                    js = response1.daily[j]
-
-                    let y = {}
-                    y['id'] = j + nr
-                    nr++
-                    y['name'] = days[new Date(js.dt * 1000 + (response1.timezone_offset * 1000)).getDay()].substring(0, 3)
-
-                    y['tempMin'] = parseInt(js.temp['min'])
-                    y['tempMax'] = parseInt(js.temp['max'])
-                    y['urlIcon'] = 'http://openweathermap.org/img/w/' + js.weather[0].icon + '.png'
-                    weather7Days.push(y)
-               }
-
-               dispatch({ type: 'ADD_TEMP', hourlyWeather, weather7Days, descriptionWeather, iconWeather  })
-
-          })
-          .catch(err => console.log("not"))
-
-}
-
+          dispatch({
+            type: ADD_LOCATION_TEMP,
+            hourlyWeather,
+            weather7Days,
+            descriptionWeather,
+            iconWeather,
+          });
+        });
+    })
+    .catch((error) => console.error("Error", error));
+};

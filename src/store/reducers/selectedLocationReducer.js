@@ -1,17 +1,52 @@
-import { ADD_LOCATION, ADD_TEMP, ADD_NAME_LOCATION } from '../constants'
+import {
+  ADD_POSITION,
+  ADD_LOCATION_TEMP,
+  ADD_LOCATION_NAME,
+} from "../constants";
 
-const selectedLocationReducer = (state = { location: { lat: '', lng: '' }, nameLocation: '', temp: 0, curentHour: '', tempLocation: '', curentWeather: '', url: '', hourlyWeather: [], weather7Days: [], descriptionWeather: '', iconWeather: '' }, action) => {
-    switch (action.type) {
-        case ADD_LOCATION:
-            return { ...state, location: action.location }
-        case ADD_TEMP:
-            return { ...state, hourlyWeather: action.hourlyWeather, weather7Days: action.weather7Days, descriptionWeather: action.descriptionWeather, iconWeather: action.iconWeather }
-        case ADD_NAME_LOCATION:
-            return {
-                ...state, nameLocation: action.nameLocation, tempLocation: action.tempLocation
-            }
-        default:
-            return state
-    }
-}
-export default selectedLocationReducer
+const initialState = {
+  position: { lat: "", lng: "" },
+  locationName: "",
+  temp: 0,
+  curentHour: "",
+  locationTemp: "",
+  curentWeather: "",
+  url: "",
+  hourlyWeather: [],
+  weather7Days: [],
+  descriptionWeather: "",
+  iconWeather: "",
+};
+
+const selectedLocationReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case ADD_POSITION:
+      const { position } = action;
+      return { ...state, position };
+    case ADD_LOCATION_TEMP:
+      const { 
+        hourlyWeather, 
+        weather7Days, 
+        descriptionWeather, 
+        iconWeather 
+      } = action;
+
+      return {
+        ...state,
+        hourlyWeather,
+        weather7Days,
+        descriptionWeather,
+        iconWeather,
+      };
+    case ADD_LOCATION_NAME:
+      const { locationName, locationTemp } = action;
+      return {
+        ...state,
+        locationName,
+        locationTemp,
+      };
+    default:
+      return state;
+  }
+};
+export default selectedLocationReducer;
