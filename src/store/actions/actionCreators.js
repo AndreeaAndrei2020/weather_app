@@ -10,7 +10,7 @@ const FORECAST_WEATHER_URL = `${BASE_URL}/onecall`;
 const CURRENT_WEATHER_URL = `${BASE_URL}/weather`;
 const APP_ID = "98c355d73f22c6eb33c4bc0bd22031fe";
 
-export const addPosition = (position) => ({ type: ADD_POSITION, position });
+export const addPosition = (position,ok) => ({ type: ADD_POSITION, position , ok });
 
 export const getCurrentWeatherData = (lat, lon, dispatch) => {
   fetch(
@@ -38,10 +38,7 @@ export const getCurrentWeatherData = (lat, lon, dispatch) => {
           response1.hourly.forEach((item, index) => {
             if (index > 4) return;
 
-            const hourDateObj = new Date(
-              item.dt * 1000 + response1.timezone_offset * 1000
-            ).getHours();
-
+            const hourDateObj = new Date(item.dt*1000).toLocaleTimeString('it-IT').slice(0,5)
             hourlyWeather.push({
               id: hourDateObj,
               hourlyWeather: hourDateObj,
@@ -57,9 +54,9 @@ export const getCurrentWeatherData = (lat, lon, dispatch) => {
             const dayDateObj = new Date(
               item.dt * 1000 + response1.timezone_offset * 1000
             ).getDay();
-
+            
             weather7Days.push({
-              id: dayDateObj,
+              id: (index+1)*6,
               name: WEEK_DAYS[dayDateObj].substring(0, 3),
               tempMin: parseInt(item.temp.min),
               tempMax: parseInt(item.temp.max),

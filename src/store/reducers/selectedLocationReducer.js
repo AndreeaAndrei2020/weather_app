@@ -5,7 +5,7 @@ import {
 } from "../constants";
 
 const initialState = {
-  position: { lat: "", lng: "" },
+  position: { lat: '', lng: '' },
   locationName: "",
   temp: 0,
   curentHour: "",

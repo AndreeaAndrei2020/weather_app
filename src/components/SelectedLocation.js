@@ -6,7 +6,7 @@ import {
   addPosition,
   getCurrentWeatherData,
 } from "../store/actions/actionCreators";
-
+var startMarker = false
 const SelectedLocation = () => {
   const {
     position,
@@ -15,27 +15,30 @@ const SelectedLocation = () => {
     iconWeather,
     descriptionWeather,
     hourlyWeather,
-    weather7Days,
+    weather7Days
   } = useSelector((state) => state.selectedLocation);
   const dispatch = useDispatch();
-
+  console.log(11,hourlyWeather)
+  const partWholeLocationTemp = parseInt(locationTemp)
   useMapEvents({
     click: (e) => {
+      startMarker = true
       const { lat, lng } = e.latlng;
-      dispatch(addPosition({ lat, lng }));
+      dispatch(addPosition({ lat, lng }, 'false'));
       dispatch(getCurrentWeatherData(lat, lng, dispatch));
+
     },
   });
 
   return (
-    position && (
+    startMarker && (
       <Marker position={position}>
         <Popup className="pop">
           <Card className="text-center cardLocation">
             <Card.Body>
               <div className="locationName">
                 <h6 style={{ marginBottom: "-2px" }}>{locationName}</h6>
-                <h5>{locationTemp} °C </h5>
+                <h5>{partWholeLocationTemp} °C </h5>
               </div>
               <br />
               <Card.Text>
@@ -51,7 +54,7 @@ const SelectedLocation = () => {
                       {hourlyWeather.map((state) => (
                         <>
                           <div key={state.id} className="col-sm">
-                            <p>{state.hour} </p>
+                            <p>{state.hourlyWeather}  </p>
                             <img src={state.urlIcon} alt="icon" />
                             <p className="p2">{state.temp} °C </p>
                           </div>
@@ -63,17 +66,26 @@ const SelectedLocation = () => {
                 <div>
                   <Container>
                     {weather7Days.map((state) => (
-                      <div key={state.id}>
-                        <Row>
-                          <Col>
-                            <pre style={{ margin: "-8px" }}>
-                              {" "}
-                              {state.name}{" "}
-                              <img alt="icon" src={state.urlIcon} />{" "}
-                              {state.tempMin}°C {state.tempMax}°{" "}
-                            </pre>
-                          </Col>
-                        </Row>
+                      <div className="container" key={state.id}>
+                        <div className="row ">
+                          <div className="col-sm " >
+                            <p> {state.name} </p>
+                          </div>
+                          <div className="col-sm">
+                            <img alt="icon" src={state.urlIcon} />
+                          </div>
+                          <div className="col-sm rowWeather" >
+                            <div className="row">
+                              <div className="col-8 col-sm-5" >
+                                Min:  {state.tempMin}°C
+                              </div>
+                              <div className=" col-8 col-sm-5">
+                                Max: {state.tempMax}°C
+                              </div>
+                            </div>
+
+                          </div>
+                        </div>
                       </div>
                     ))}
                   </Container>
