@@ -10,24 +10,26 @@ const FORECAST_WEATHER_URL = `${BASE_URL}/onecall`;
 const CURRENT_WEATHER_URL = `${BASE_URL}/weather`;
 const APP_ID = "98c355d73f22c6eb33c4bc0bd22031fe";
 
-export const addPosition = (position,ok) => ({ type: ADD_POSITION, position , ok });
+export const addPosition = (position) => ({ type: ADD_POSITION, position});
 
 export const getCurrentWeatherData = (lat, lon, dispatch) => {
   fetch(
     `${FORECAST_WEATHER_URL}?lat=${lat}&lon=${lon}&units=metric&appid=${APP_ID}`
   )
     .then((response1) => response1.json())
-    .then((response1) => {
+    .then((response1) => {  
+
       fetch(
         `${CURRENT_WEATHER_URL}?lat=${lat}&lon=${lon}&units=metric&appid=${APP_ID}`
       )
         .then((response2) => response2.json())
         .then((response2) => {
+
           const {
             name: locationName,
             main: { temp: locationTemp },
           } = response2;
-
+          
           dispatch({ type: ADD_LOCATION_NAME, locationName, locationTemp });
 
           const descriptionWeather = response1.hourly[0].weather[0].main;
@@ -56,7 +58,7 @@ export const getCurrentWeatherData = (lat, lon, dispatch) => {
             ).getDay();
             
             weather7Days.push({
-              id: (index+1)*6,
+              id: dayDateObj,
               name: WEEK_DAYS[dayDateObj].substring(0, 3),
               tempMin: parseInt(item.temp.min),
               tempMax: parseInt(item.temp.max),

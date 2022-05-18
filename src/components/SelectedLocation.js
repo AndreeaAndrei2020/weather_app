@@ -1,13 +1,16 @@
+import React, { useState} from 'react';
 import { Marker, Popup, useMapEvents } from "react-leaflet";
 import { useDispatch, useSelector } from "react-redux";
-import { Card, Container, Col, Row } from "react-bootstrap";
+import { Card, Container } from "react-bootstrap"
 import "bootstrap/dist/css/bootstrap.min.css";
 import {
   addPosition,
   getCurrentWeatherData,
 } from "../store/actions/actionCreators";
-var startMarker = false
+
 const SelectedLocation = () => {
+
+  const [startMarker, setStartMarker] = useState(false)
   const {
     position,
     locationName,
@@ -18,15 +21,12 @@ const SelectedLocation = () => {
     weather7Days
   } = useSelector((state) => state.selectedLocation);
   const dispatch = useDispatch();
-  console.log(11,hourlyWeather)
-  const partWholeLocationTemp = parseInt(locationTemp)
   useMapEvents({
     click: (e) => {
-      startMarker = true
+      setStartMarker(true)
       const { lat, lng } = e.latlng;
-      dispatch(addPosition({ lat, lng }, 'false'));
-      dispatch(getCurrentWeatherData(lat, lng, dispatch));
-
+      dispatch(addPosition({ lat, lng }));
+      getCurrentWeatherData(lat, lng, dispatch)
     },
   });
 
@@ -38,7 +38,7 @@ const SelectedLocation = () => {
             <Card.Body>
               <div className="locationName">
                 <h6 style={{ marginBottom: "-2px" }}>{locationName}</h6>
-                <h5>{partWholeLocationTemp} °C </h5>
+                <h5>{locationTemp} °C </h5>
               </div>
               <br />
               <Card.Text>

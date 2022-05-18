@@ -43,7 +43,7 @@ const selectedLocationReducer = (state = initialState, action) => {
       return {
         ...state,
         locationName,
-        locationTemp,
+        locationTemp : parseInt(locationTemp),
       };
     default:
       return state;
